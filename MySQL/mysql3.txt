@@ -1,0 +1,112 @@
+--数据库约束
+
+--NULL约束  创建表时，可以指定某列不为空
+--重新设置学生表结构
+mysql> DROP TABLE IF EXISTS student;
+mysql> CREATE TABLE student (
+    -> id INT NOT NULL,
+    -> sn INT,
+    -> name VARCHAR(20),
+    -> qq_mail VARCHAR(20)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+--UNIQUE：唯一约束  
+--指定sn列为唯一的、不重复的
+mysql> DROP TABLE IF EXISTS student;
+mysql> CREATE TABLE student (
+    -> id INT NOT NULL,
+    -> sn INT UNIQUE,
+    -> name VARCHAR(20),
+    -> qq_mail VARCHAR(20)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+--DEFAULT：默认值约束
+--指定插入数据时，name列为空，默认值unkown
+mysql> DROP TABLE IF EXISTS student;
+mysql> CREATE TABLE student (
+    -> id INT NOT NULL,
+    -> sn INT UNIQUE,
+    -> name VARCHAR(20) DEFAULT 'unkown',
+    -> qq_mail VARCHAR(20)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+-- PRIMARY KEY：主键约束
+--指定id列为主键
+mysql> DROP TABLE IF EXISTS student;
+mysql> CREATE TABLE student (
+    -> id INT NOT NULL PRIMARY KEY,
+    -> sn INT UNIQUE,
+    -> name VARCHAR(20) DEFAULT 'unkown',
+    -> qq_mail VARCHAR(20)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+--FOREIGN KEY：外键约束
+--外键用于关联其他主键或唯一键
+--创建班级表classes，ID为主键
+mysql> DROP TABLE IF EXISTS classes;
+mysql> CREATE TABLE classes (
+    -> id INT PRIMARY KEY auto_increment,
+    -> name VARCHAR(20),
+    -> `desc` VARCHAR(100)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+--创建学生表，ID为主键，class_ID为外键，关联班级表id
+mysql> DROP TABLE IF EXISTS student;
+mysql> CREATE TABLE student (
+    -> id INT NOT NULL PRIMARY KEY,
+    -> sn INT UNIQUE,
+    -> name VARCHAR(20) DEFAULT 'unkown',
+    -> qq_mail VARCHAR(20)
+    -> ,
+    -> classes_id INT,
+    -> FOREING KEY (classes_id) REFERENCES classes(id)
+    -> );
+
+--CHECK约束
+--MySQL使用时不报错，但忽略该约束
+mysql> DROP TABLE IF EXISTS test_user;
+mysql> CREATE TABLE test_user (
+    -> id INT,
+    -> name VARCHAR(20),
+    -> sex VARCHAR(1),
+    -> check(sex = '男' or sex = '女')
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+
+--表的设计
+--创建课程表
+mysql> create table couesr (
+    -> id int primary key auto_increment,
+    -> name varchar(20)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+--创建学生课程中间表，考试成绩表
+mysql> create table score (
+    -> id int primary key auto_increment,
+    -> score decimal(3,1),
+    -> student_id int,
+    -> course_id int,
+    -> foreign key (student_id) references student(id),
+    -> foreign key (course_id) references course(id)
+    -> );
+	
+--新增
+drop table if exists test_user;
+create table test_user (
+id int primary key auto_increment,
+name varchar(20) comment '姓名',
+age INT comment '年龄',
+email VARCHAR(20) comment '邮箱',
+sex varchar(1) comment '性别',
+mobile varchar(20) comment '手机号'
+);
+
+--将学生表中的所有数据复制到用户表
+insert into test_user(name, email) select name,qq_mail from student;
