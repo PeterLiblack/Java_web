@@ -1,0 +1,1 @@
+@java -cp "G:\idea\MySQL\Test2\out\production\Test2;G:\idea\MySQL\Test2\lib\mysql-connector-java-5.1.47.jar" com.li.MySQLClient%*
